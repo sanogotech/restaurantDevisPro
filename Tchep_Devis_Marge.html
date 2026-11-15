@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#7B2D12">
+<title>Tchèp Devis &amp; Marge</title>
+<style>
+:root{--br:#7B2D12;--br2:#9A3E1C;--gold:#E8A33D;--cream:#FDF3E3;--bg:#F7F2EA;--card:#fff;--ink:#2B1A12;--muted:#7A6A60;--line:#EADFD2;--ok:#1E7B45;--okbg:#E3F4EA;--warn:#9A5B00;--warnbg:#FFF1D6;--bad:#B3261E;--badbg:#FDE3E1;--r:14px;--sh:0 1px 3px rgba(60,30,10,.08),0 4px 14px rgba(60,30,10,.06)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px;line-height:1.45}
+button,input,select,textarea{font:inherit;color:inherit}
+header.top{position:sticky;top:0;z-index:20;background:var(--br);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+header.top .logo{width:36px;height:36px;border-radius:10px;background:var(--gold);display:grid;place-items:center;font-size:20px;flex:none}
+header.top .ttl{flex:1;min-width:0}
+header.top .ttl b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header.top .ttl small{opacity:.8;font-size:12px}
+.ibtn{width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.15);color:#fff;font-size:18px;cursor:pointer;flex:none}
+main{max-width:760px;margin:0 auto;padding:14px 16px calc(96px + env(safe-area-inset-bottom))}
+nav.bot{position:fixed;left:0;right:0;bottom:0;z-index:20;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom)}
+nav.bot .in{display:flex;width:100%;max-width:760px}
+nav.bot button{flex:1;border:0;background:none;padding:8px 2px 9px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--muted);cursor:pointer}
+nav.bot button span{font-size:22px;line-height:1}
+nav.bot button.on{color:var(--br);font-weight:700}
+nav.bot button.on span{transform:translateY(-1px)}
+h2{font-size:20px;margin:6px 0 12px}
+h3{font-size:16px;margin:0;display:flex;align-items:center;gap:8px}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:14px;margin-bottom:14px}
+.card .hd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.muted{color:var(--muted);font-size:13px}
+.small{font-size:13px}
+.q{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--gold);color:var(--br);background:var(--cream);font-size:12px;font-weight:800;cursor:pointer;flex:none;padding:0}
+.btn{border:0;border-radius:12px;padding:12px 14px;min-height:46px;background:var(--cream);color:var(--br);font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.pri{background:var(--br);color:#fff}
+.btn.gold{background:var(--gold);color:#3a1d06}
+.btn.wa{background:#1FA855;color:#fff}
+.btn.ghost{background:transparent;border:1.5px dashed var(--line);color:var(--br)}
+.btn.danger{background:var(--badbg);color:var(--bad)}
+.btn.sm{min-height:36px;padding:7px 10px;font-size:14px;border-radius:10px}
+.btn.full{width:100%}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.field label{font-size:13px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:6px}
+input[type=text],input[type=tel],input[type=date],input[type=number],input:not([type]),select,textarea{width:100%;min-height:44px;border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;background:#FFFCF5;font-size:16px}
+input:focus,select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,163,61,.25)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(min-width:560px){.g2w{display:grid;grid-template-columns:1fr 1fr;gap:10px}}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:12px}
+.kpi b{display:block;font-size:20px;color:var(--br)}
+.kpi span{font-size:12px;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap}
+.b-ok{background:var(--okbg);color:var(--ok)}.b-warn{background:var(--warnbg);color:var(--warn)}.b-bad{background:var(--badbg);color:var(--bad)}.b-none{background:#eee;color:#666}
+.alert{border-radius:12px;padding:10px 12px;font-size:14px;margin:8px 0;display:flex;gap:8px}
+.alert.ok{background:var(--okbg);color:#14512e}.alert.warn{background:var(--warnbg);color:#6b4000}.alert.bad{background:var(--badbg);color:#7d1a14}.alert.info{background:var(--cream);color:#5a2a10}
+.hero{background:linear-gradient(135deg,var(--br),var(--br2));color:#fff;border-radius:18px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
+.hero:after{content:"🍛";position:absolute;right:-6px;bottom:-14px;font-size:84px;opacity:.18}
+.hero h2{margin:0 0 6px;color:#fff}
+.hero p{margin:0 0 12px;opacity:.92;font-size:14px;max-width:85%}
+.steps{display:grid;gap:10px;margin-bottom:14px}
+.step{display:flex;align-items:center;gap:12px;background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:12px;cursor:pointer;border:0;text-align:left;width:100%}
+.step .n{width:38px;height:38px;border-radius:50%;background:var(--gold);color:#3a1d06;font-weight:800;display:grid;place-items:center;flex:none}
+.step b{display:block}
+.step .go{margin-left:auto;color:var(--muted);font-size:20px}
+.seg{display:flex;background:#EFE5D8;border-radius:12px;padding:4px;gap:4px;margin-bottom:14px;overflow-x:auto}
+.seg button{flex:1;border:0;background:none;border-radius:9px;padding:9px 8px;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.seg button.on{background:#fff;color:var(--br);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.pcard{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:12px 14px;margin-bottom:10px;cursor:pointer;border:0;width:100%;text-align:left;display:block}
+.pcard .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.pcard b{font-size:16px}
+.pcard .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.pcard .nums div{background:var(--bg);border-radius:9px;padding:6px 8px}
+.pcard .nums span{display:block;font-size:11px;color:var(--muted)}
+.pcard .nums strong{font-size:14px}
+.bar{position:relative;height:8px;background:#EFE5D8;border-radius:99px;margin-top:10px;overflow:visible}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+.bar em{position:absolute;top:-4px;width:2px;height:16px;background:var(--ink)}
+.ingrow{display:grid;grid-template-columns:1fr 92px 112px 38px;gap:6px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.ingrow input,.ingrow select{min-height:40px;padding:7px 8px}
+.ingrow .used{grid-column:1/-1;font-size:11px;color:var(--muted);margin-top:-2px}
+@media(max-width:420px){.ingrow{grid-template-columns:1fr 78px 98px 36px}}
+.cathd{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--br);margin:14px 0 2px}
+.del{width:36px;height:36px;border-radius:10px;border:0;background:var(--badbg);color:var(--bad);cursor:pointer;font-size:16px}
+.line{border:1.5px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px;background:#FFFCF5}
+.line .lh{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.line .lh select,.line .lh input{flex:1}
+.lgrid{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;align-items:center}
+.stepper{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;width:max-content}
+.stepper button{width:44px;height:44px;border:0;background:var(--cream);color:var(--br);font-size:22px;font-weight:700;cursor:pointer}
+.stepper input{width:64px;border:0!important;text-align:center;min-height:44px;border-radius:0;font-weight:700;background:#fff;box-shadow:none!important}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:15px}
+.kv:last-child{border-bottom:0}
+.kv b{white-space:nowrap}
+.kv.tot{background:var(--gold);color:#3a1d06;border-radius:10px;padding:10px 12px;border:0;margin:6px 0;font-size:17px;font-weight:800}
+.kv.big{font-size:18px;font-weight:800;color:var(--br)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 2px}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:6px 11px;font-size:13px;cursor:pointer;color:var(--br);font-weight:600}
+.patron{border:2px solid #404040;background:#FAFAFA}
+.patron h3{color:#303030}
+body.client .patron-only{display:none!important}
+.tag{display:inline-block;font-size:11px;font-weight:700;background:#404040;color:#fff;padding:2px 7px;border-radius:6px}
+.reco{list-style:none;margin:8px 0 0;padding:0}
+.reco li{margin:6px 0}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:var(--br);color:#fff;font-weight:600;padding:7px 6px;text-align:right}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.tbl td:first-child{white-space:normal}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+.range{margin:6px 0 12px}
+.range .rl{display:flex;justify-content:space-between;font-size:14px;font-weight:600}
+.range .rl b{color:var(--br)}
+input[type=range]{width:100%;accent-color:var(--br);height:32px}
+details.acc{background:#fff;border-radius:var(--r);box-shadow:var(--sh);margin-bottom:10px;overflow:hidden}
+details.acc summary{list-style:none;padding:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:10px}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary:after{content:"＋";margin-left:auto;color:var(--br)}
+details.acc[open] summary:after{content:"－"}
+details.acc .bd{padding:0 14px 14px;font-size:15px}
+.tip{border-left:4px solid var(--gold);background:var(--cream);border-radius:0 10px 10px 0;padding:9px 12px;margin:8px 0;font-size:14px}
+.rex{border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;margin:10px 0}
+.rex b{color:var(--br)}
+.rex .les{background:var(--okbg);color:#14512e;border-radius:8px;padding:7px 9px;margin-top:6px;font-size:14px}
+.target{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;padding:9px 0;border-bottom:1px dashed var(--line)}
+.target .v{font-weight:800;color:var(--br);font-size:18px;min-width:78px}
+.check{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--line);cursor:pointer}
+.check input{width:22px;height:22px;accent-color:var(--ok);flex:none;margin-top:1px}
+.overlay{position:fixed;inset:0;background:rgba(30,15,5,.45);z-index:40;display:none;align-items:flex-end;justify-content:center}
+.overlay.on{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:760px;max-height:94vh;border-radius:20px 20px 0 0;display:flex;flex-direction:column;animation:up .22s ease}
+.sheet .sh{display:flex;align-items:center;gap:10px;padding:14px 16px;background:#fff;border-radius:20px 20px 0 0;border-bottom:1px solid var(--line)}
+.sheet .sh b{flex:1;font-size:17px}
+.sheet .sb{overflow-y:auto;padding:14px 16px calc(24px + env(safe-area-inset-bottom))}
+.x{width:38px;height:38px;border-radius:50%;border:0;background:var(--cream);color:var(--br);font-size:18px;cursor:pointer}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+#popO{z-index:60;align-items:center;padding:16px}
+.pop{background:#fff;border-radius:18px;max-width:480px;width:100%;max-height:86vh;overflow-y:auto;padding:18px;animation:up .2s ease}
+.pop h3{font-size:18px;color:var(--br);margin-bottom:8px}
+.pop .ex{background:var(--cream);border-radius:10px;padding:10px 12px;margin-top:10px;font-size:14px}
+.pop .ex b{color:var(--br)}
+#tourO{z-index:70;align-items:center;padding:16px}
+.tour{background:#fff;border-radius:22px;max-width:420px;width:100%;padding:24px 20px 18px;text-align:center;animation:up .2s ease}
+.tour .em{font-size:58px;line-height:1.1}
+.tour h3{justify-content:center;font-size:20px;margin:10px 0 8px;color:var(--br)}
+.tour p{color:var(--muted);margin:0 0 16px}
+.dots{display:flex;justify-content:center;gap:6px;margin-bottom:14px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--br);width:22px;border-radius:99px}
+.toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#2B1A12;color:#fff;padding:10px 16px;border-radius:99px;font-size:14px;z-index:80;opacity:0;transition:.25s;pointer-events:none;max-width:90%;text-align:center}
+.toast.on{opacity:1}
+.hist{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line)}
+.hist div{flex:1;min-width:0}
+.hist b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.explain{background:var(--cream);border-radius:12px;padding:10px 12px;font-size:14px}
+.explain ol{margin:6px 0 0;padding-left:20px}
+.explain li{margin:3px 0}
+.search{position:relative;margin-bottom:6px}
+.empty{text-align:center;color:var(--muted);padding:18px 8px}
+#printArea{display:none}
+@media print{
+ body *{visibility:hidden}
+ #printArea,#printArea *{visibility:visible}
+ #printArea{display:block;position:absolute;left:0;top:0;width:100%;font-family:Arial,sans-serif;color:#000;font-size:12px}
+ #printArea h1{font-size:20px;margin:0;color:#7B2D12}
+ #printArea table{width:100%;border-collapse:collapse;margin:10px 0}
+ #printArea th,#printArea td{border:1px solid #999;padding:5px 7px;text-align:right}
+ #printArea th:nth-child(1),#printArea td:nth-child(1),#printArea th:nth-child(2),#printArea td:nth-child(2){text-align:left}
+ #printArea th{background:#7B2D12;color:#fff}
+ #printArea .tt td{font-weight:bold;background:#E8A33D}
+ @page{margin:14mm}
+}
+</style>
+</head>
+<body>
+<header class="top">
+ <div class="logo">🍛</div>
+ <div class="ttl"><b id="hName">Restaurant</b><small>Devis &amp; marge — commandes de 10 plats et +</small></div>
+ <button class="ibtn" data-a="help" data-k="general" aria-label="Aide">?</button>
+ <button class="ibtn" data-a="settings" aria-label="Réglages">⚙</button>
+</header>
+<main id="view"></main>
+<nav class="bot"><div class="in" id="nav"></div></nav>
+<div class="overlay" id="sheetO"><div class="sheet" id="sheet"></div></div>
+<div class="overlay" id="popO"><div class="pop" id="pop"></div></div>
+<div class="overlay" id="tourO"><div class="tour" id="tour"></div></div>
+<div class="toast" id="toast"></div>
+<div id="printArea"></div>
+<input type="file" id="fileIn" accept=".json,application/json" style="display:none">
+
+<script>
+/* ===================== DONNÉES PAR DÉFAUT ===================== */
+const KEY='tchepDevisMarge_v1';
+const CATS=['Féculent','Protéine','Légume','Aromate','Sauce','Matière grasse','Cuisson','Emballage','Autre'];
+const UNITS=['kg','g','L','pièce','unité','boîte','sachet','lot','botte','tas'];
+const PCATS=['Tchèp','Plat africain','Accompagnement','Boisson','Dessert','Autre'];
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+const ING0=[
+['riz','Riz brisé','Féculent','kg',700],['attieke','Attiéké','Féculent','kg',500],['plantain','Banane plantain','Féculent','pièce',150],['manioc','Manioc','Légume','kg',400],
+['poulet','Poulet','Protéine','kg',2500],['poisson','Poisson (maquereau / chinchard)','Protéine','kg',1700],['tilapia','Tilapia','Protéine','kg',1800],['boeuf','Viande de bœuf','Protéine','kg',3500],
+['carotte','Carotte','Légume','kg',1000],['chou','Chou','Légume','kg',700],['aubergine','Aubergine','Légume','kg',1000],['gombo','Gombo','Légume','kg',1000],
+['oignon','Oignon','Aromate','kg',600],['ail','Ail','Aromate','kg',2500],['gingembre','Gingembre','Aromate','kg',1500],['piment','Piment','Aromate','kg',2000],
+['tomate','Tomate fraîche','Sauce','kg',1500],['concentre','Concentré de tomate (boîte 70 g)','Sauce','boîte',150],['arachide',"Pâte d'arachide",'Sauce','kg',2000],
+['cube','Cube bouillon','Sauce','unité',25],['sel','Sel','Sauce','kg',300],['epices','Épices & condiments (lot 10 portions)','Sauce','lot',500],
+['huile','Huile végétale','Matière grasse','L',1500],['gaz','Gaz (lot cuisson 10 portions)','Cuisson','lot',500],['charbon','Charbon (lot braise 10 portions)','Cuisson','lot',500],
+['emb','Kit emballage (barquette + couvercle + sachet + couverts)','Emballage','unité',300]];
+const PL0=[
+['p1','Tchèp Poulet','Tchèp',3000,[['riz',2.5],['poulet',3],['carotte',.5],['chou',.5],['aubergine',.5],['oignon',.5],['tomate',.5],['huile',.5],['epices',1],['gaz',1],['emb',10]]],
+['p2','Tchèp Poisson','Tchèp',2500,[['riz',2.5],['poisson',2.5],['carotte',.5],['chou',.5],['aubergine',.5],['manioc',.5],['oignon',.5],['tomate',.5],['concentre',2],['huile',.5],['cube',10],['epices',1],['gaz',1],['emb',10]]],
+['p3','Tchèp Viande','Tchèp',3500,[['riz',2.5],['boeuf',2],['carotte',.5],['chou',.5],['aubergine',.5],['oignon',.5],['tomate',.5],['concentre',2],['huile',.5],['cube',10],['epices',1],['gaz',1.5],['emb',10]]],
+['p4','Attiéké Poisson braisé','Plat africain',2500,[['attieke',2.5],['tilapia',3],['oignon',.5],['tomate',.5],['piment',.1],['huile',.3],['cube',5],['epices',1],['charbon',1],['emb',10]]],
+['p5','Riz sauce arachide poulet','Plat africain',2500,[['riz',2],['poulet',2.5],['arachide',.5],['tomate',.5],['oignon',.3],['concentre',1],['piment',.05],['cube',10],['epices',1],['gaz',1],['emb',10]]],
+['p6','Kedjenou poulet + attiéké','Plat africain',3000,[['poulet',3],['attieke',2],['tomate',.7],['oignon',.5],['aubergine',.5],['gingembre',.05],['ail',.05],['piment',.05],['cube',5],['epices',1],['charbon',1],['emb',10]]],
+['p7','Alloco Poisson','Plat africain',2000,[['plantain',20],['poisson',2.5],['huile',1.5],['oignon',.3],['tomate',.3],['piment',.05],['sel',.05],['gaz',1],['emb',10]]]];
+function newDevis(num){return{num:num||'DV-2026-001',date:today(),client:'',tel:'',event:'',lieu:'',lines:[{plat:'p1',q:10,pn:''}],frais:[{d:'Livraison',q:1,pv:5000,co:3000}],rf:''}}
+function defaults(){return{
+ params:{nom:'RESTAURANT TCHÈP',tel:'+225 07 00 00 00 00',marge:0.40,pertes:0.05,min:10,arr:50,tva:0,acompte:0.5,validite:15},
+ tiers:[{min:10,r:0},{min:30,r:0.05},{min:50,r:0.08},{min:100,r:0.10}],
+ ings:ING0.map(a=>({id:a[0],n:a[1],c:a[2],u:a[3],p:a[4]})),
+ plats:PL0.map(a=>({id:a[0],n:a[1],cat:a[2],portions:10,prix:a[3],lines:a[4].map(l=>({i:l[0],q:l[1]}))})),
+ devis:{num:'DV-2026-001',date:today(),client:'Exemple — Famille Koné',tel:'',event:'Anniversaire',lieu:'Samedi — Grand-Bassam',
+  lines:[{plat:'p1',q:30,pn:''},{plat:'p2',q:20,pn:''}],
+  frais:[{d:'Livraison',q:1,pv:5000,co:3000},{d:'Personnel de service (par personne)',q:2,pv:7500,co:5000}],rf:''},
+ history:[],
+ sim:{f:{fec:0,poulet:0,poisson:0,viande:0,leg:0,huile:0,energie:0,emb:0},
+  ev:{n:150,plat:'p1',pu:'',remise:8,serv:25,servCo:5000,servPv:7500,livCo:3000,livPv:5000},
+  obj:{charges:150000,benef:300000,plat:'avg',parCmd:20},
+  pc:{plat:'p1',mode:'benef',val:1200}},
+ ui:{tab:'home',seen:false,patron:true,platsSeg:'plats',simSeg:'hausse',seq:2}
+}}
+/* ===================== ÉTAT ===================== */
+let S;
+function load(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);const d=defaults();return Object.assign(d,o,{params:Object.assign(d.params,o.params||{}),sim:Object.assign(d.sim,o.sim||{}),ui:Object.assign(d.ui,o.ui||{})})}}catch(e){}return defaults()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+S=load();
+/* ===================== OUTILS ===================== */
+const NF=new Intl.NumberFormat('fr-FR',{maximumFractionDigits:0});
+const F=n=>NF.format(Math.round(isFinite(n)?n:0))+' F';
+const P=x=>(x==null||!isFinite(x))?'—':(Math.round(x*1000)/10).toLocaleString('fr-FR')+' %';
+const num=v=>{const n=parseFloat(String(v==null?'':v).replace(/\s/g,'').replace(',','.'));return isNaN(n)?0:n};
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const ingById=id=>S.ings.find(x=>x.id===id);
+const platById=id=>S.plats.find(x=>x.id===id);
+const ceilTo=(v,a)=>a>0?Math.ceil(v/a-1e-9)*a:v;
+const pctv=x=>Math.round(x*1000)/10;
+function grp(ing){const n=(ing.n||'').toLowerCase();
+ if(ing.c==='Protéine'){if(/poulet|volaille|pintade|dinde/.test(n))return'poulet';if(/poisson|tilapia|thon|maquereau|chinchard|capitaine|carpe|sardine|crevette/.test(n))return'poisson';return'viande'}
+ return {Féculent:'fec',Légume:'leg',Aromate:'leg',Sauce:'leg','Matière grasse':'huile',Cuisson:'energie',Emballage:'emb'}[ing.c]||'leg'}
+/* ===================== CALCULS ===================== */
+function platCalc(p,fac){
+ const m=S.params.marge;let mat=0;
+ (p.lines||[]).forEach(l=>{const g=ingById(l.i);if(!g)return;const f=fac?fac(g):1;mat+=g.p*f*num(l.q)});
+ const por=num(p.portions)||0;const brut=por?mat/por:0;const rev=brut*(1+S.params.pertes);
+ const cons=rev?ceilTo(rev/(1-m),S.params.arr):0;const prix=num(p.prix);
+ const marge=prix?prix-rev:null;const taux=prix?marge/prix:null;const fc=prix?rev/prix:null;
+ const st=!prix?'none':taux>=m-1e-9?'ok':taux>0?'warn':'bad';
+ return{mat,brut,rev,cons,prix,marge,taux,fc,st}}
+function tierRate(n){const t=[...S.tiers].filter(x=>num(x.min)>0).sort((a,b)=>a.min-b.min);let r=0;t.forEach(x=>{if(n>=x.min)r=num(x.r)});return r}
+function devisCalc(d){
+ d=d||S.devis;const m=S.params.marge;let nb=0,st=0,cp=0;const L=[];
+ d.lines.forEach((l,i)=>{const p=platById(l.plat);const q=num(l.q);
+  if(!p){L.push(null);return}const c=platCalc(p);const pu=num(l.pn)>0?num(l.pn):c.prix;
+  const mt=q*pu,co=q*c.rev;nb+=q;st+=mt;cp+=co;L.push({p,c,q,pu,mt,co,mg:mt-co,neg:num(l.pn)>0})});
+ let fr=0,fc=0;const FR=d.frais.map(f=>{const q=num(f.q),mt=q*num(f.pv),co=q*num(f.co);fr+=mt;fc+=co;return{mt,co,mg:mt-co}});
+ const forced=String(d.rf).trim()!=='';const r=forced?num(d.rf)/100:tierRate(nb);
+ const rem=st*r,net=st-rem,ht=net+fr,tva=ht*S.params.tva,ttc=ht+tva;
+ const acp=Math.round(ttc*S.params.acompte/10)*10,solde=ttc-acp;
+ const cout=cp+fc,benef=ht-cout,taux=ht?benef/ht:0,parPlat=nb?benef/nb:0,plancher=cout/(1-m);
+ const rmax=st?1-(cout/(1-m)-fr)/st:0;
+ const status=nb<S.params.min?'min':benef<0?'bad':taux<m-1e-9?'warn':'ok';
+ return{L,FR,nb,st,r,forced,rem,net,fr,fc,ht,tva,ttc,acp,solde,cp,cout,benef,taux,parPlat,plancher,rmax,status}}
+function badge(st){return{ok:'<span class="badge b-ok">✔ Marge conforme</span>',warn:'<span class="badge b-warn">⚠ Sous la cible</span>',bad:'<span class="badge b-bad">✖ Vente à perte</span>',none:'<span class="badge b-none">Prix à saisir</span>'}[st]}
+function bar(t){const m=S.params.marge,max=.7,w=Math.max(0,Math.min(t||0,max))/max*100,c=(t||0)>=m?'var(--ok)':(t||0)>0?'var(--gold)':'var(--bad)';
+ return`<div class="bar"><i style="width:${w}%;background:${c}"></i><em style="left:${m/max*100}%" title="Cible"></em></div>`}
+const qbtn=k=>`<button class="q" data-a="help" data-k="${k}" aria-label="Aide">i</button>`;
+
+/* ===================== AIDE CONTEXTUELLE ===================== */
+function exPlat(){const p=S.plats[0];return p?{p,c:platCalc(p)}:null}
+const HELP={
+ general:()=>({t:'Comment utiliser l\'appli ?',b:`<p>L'appli suit une chaîne simple :</p><p><b>Prix d'achat au kg → recette → coût par plat → devis → bénéfice</b></p><ol><li><b>Plats › Prix d'achat</b> : mettez vos vrais prix du marché.</li><li><b>Plats › Mes plats</b> : vérifiez les recettes et mettez votre prix de vente.</li><li><b>Devis</b> : choisissez plats et quantités, ajoutez les frais, envoyez par WhatsApp.</li><li><b>Simuler</b> : testez « et si les prix montent ? », un gros événement, votre objectif du mois.</li><li><b>Conseils</b> : cibles, astuces, bonnes pratiques.</li></ol><p>Touchez le petit <span class="q">i</span> partout pour une explication avec exemple.</p><div class="ex">💾 Vos données restent <b>sur ce téléphone</b>. Faites une sauvegarde de temps en temps (⚙ Réglages).</div>`}),
+ mercuriale:()=>({t:'Prix d\'achat (mercuriale)',b:`<p>C'est la liste de tout ce que vous achetez, avec le <b>prix que vous payez vraiment</b> et l'unité (kg, litre, pièce, lot…).</p><p>Quand vous changez un prix ici, <b>tous les plats et tous les devis se recalculent</b> automatiquement.</p><div class="ex"><b>Exemple :</b> le riz passe de 700 F à 800 F le kg → le coût de chaque Tchèp augmente tout seul, et l'appli vous dit si votre prix de vente est encore bon.</div><div class="tip">Mettez à jour les prix <b>au moins une fois par semaine</b>, surtout poulet, poisson, huile et tomate qui bougent beaucoup.</div>`}),
+ lot:()=>({t:'Unité « lot »',b:`<p>Certaines dépenses ne se pèsent pas : épices, gaz, charbon. On les compte en <b>lot</b> = ce qu'il faut pour une recette de 10 portions.</p><div class="ex"><b>Exemple :</b> une bouteille de gaz de 6 kg à 5 000 F permet environ 10 cuissons de 10 portions → <b>1 lot gaz = 500 F</b>.</div>`}),
+ portions:()=>({t:'Portions de la recette',b:`<p>Nombre de plats que donne la recette telle qu'elle est écrite. Toutes les quantités sont pour ce nombre de portions.</p><div class="ex"><b>Exemple :</b> 2,5 kg de riz + 3 kg de poulet + … = <b>10 plats</b>. Si vous mettez 20 portions, il faut doubler les quantités.</div>`}),
+ cout:()=>{const e=exPlat();return{t:'Coût de revient par plat',b:`<p>C'est ce que <b>vous coûte réellement un plat</b> : ingrédients + huile + épices + gaz + emballage, plus une marge de sécurité pour les pertes.</p><p><b>Formule :</b> (coût de la recette ÷ portions) × (1 + pertes)</p>${e?`<div class="ex"><b>Exemple ${esc(e.p.n)} :</b><br>Recette : ${F(e.c.mat)} pour ${e.p.portions} plats<br>÷ ${e.p.portions} = ${F(e.c.brut)}<br>+ ${P(S.params.pertes)} de pertes = <b>${F(e.c.rev)} par plat</b></div>`:''}`}},
+ conseille:()=>{const e=exPlat();return{t:'Prix conseillé',b:`<p>Le prix minimum pour garder votre <b>marge cible (${P(S.params.marge)})</b>, arrondi à ${S.params.arr} F au-dessus.</p><p><b>Formule :</b> coût de revient ÷ (1 − marge cible)</p>${e?`<div class="ex"><b>Exemple ${esc(e.p.n)} :</b> ${F(e.c.rev)} ÷ ${(1-S.params.marge).toLocaleString('fr-FR')} = ${F(e.c.rev/(1-S.params.marge))} → arrondi <b>${F(e.c.cons)}</b></div>`:''}<div class="tip">⚠ Ne faites pas « coût + 40 % » : ça donne une marge de seulement 28,6 % sur le prix de vente !</div>`}},
+ marge:()=>({t:'Marge et taux de marge',b:`<p><b>Marge</b> = prix de vente − coût de revient (en F).</p><p><b>Taux de marge</b> = marge ÷ prix de vente (en %). C'est ce qui reste pour payer le loyer, l'électricité, les salaires… et votre bénéfice.</p><div class="ex"><b>Exemple :</b> vendu 3 000 F, coûte 1 722 F → marge 1 278 F → taux <b>42,6 %</b>. Sur 100 F encaissés, il vous reste 42,6 F.</div><p>La petite barre noire sur les jauges = votre cible.</p>`}),
+ foodcost:()=>({t:'Food cost',b:`<p>Part du prix de vente qui part dans le coût du plat : coût de revient ÷ prix de vente.</p><div class="ex"><b>Exemple :</b> 1 722 F ÷ 3 000 F = <b>57 %</b>. Avec une marge cible de 40 %, le food cost doit rester sous 60 %.</div>`}),
+ pertes:()=>({t:'Pertes & sécurité',b:`<p>Un pourcentage ajouté au coût pour couvrir : épluchures, riz collé, morceau de poulet raté, plat goûté, erreur de dosage…</p><div class="ex"><b>Exemple :</b> 5 % sur 1 640 F = +82 F → coût retenu 1 722 F.</div><div class="tip">Si vous jetez souvent, montez à 8–10 %. Mieux : réduisez les pertes !</div>`}),
+ min:()=>({t:'Minimum de plats',b:`<p>L'appli est faite pour les <b>commandes groupées de ${S.params.min} plats et plus</b> (bureaux, fêtes, cérémonies). En dessous, une alerte s'affiche.</p><div class="tip">Petite commande = même temps de préparation et de livraison, mais peu de bénéfice. Gardez votre minimum !</div>`}),
+ negocie:()=>({t:'Prix négocié',b:`<p>Laissez vide pour utiliser le <b>prix carte</b>. Remplissez seulement si vous accordez un prix spécial pour ce client.</p><div class="ex"><b>Exemple :</b> Tchèp poulet carte 3 000 F, négocié 2 700 F pour une entreprise fidèle. L'appli vous montre si vous restez rentable.</div>`}),
+ remise:()=>({t:'Remise volume',b:`<p>Remise appliquée automatiquement selon le nombre de plats (barème dans ⚙ Réglages) :</p>${S.tiers.map(t=>`• dès ${t.min} plats : <b>${P(t.r)}</b>`).join('<br>')}<p>Pour forcer une autre remise, tapez-la dans « Remise forcée ». Laissez vide pour revenir au barème.</p><div class="tip">⚠ Une remise de 8 % peut faire perdre 20 % de votre bénéfice ! Regardez toujours la « Vue patron » avant d'accepter.</div>`}),
+ frais:()=>({t:'Frais annexes',b:`<p>Tout ce qui n'est pas dans l'assiette : livraison, serveurs, location de matériel, boissons, décoration…</p><p><b>Prix facturé</b> = ce que paie le client. <b>Coût réel</b> = ce que ça vous coûte (vue patron).</p><div class="ex"><b>Exemple :</b> livraison facturée 5 000 F, carburant + livreur 3 000 F → vous gagnez 2 000 F.</div><div class="tip">Ne livrez jamais gratuitement sans l'avoir calculé dans le prix des plats.</div>`}),
+ acompte:()=>({t:'Acompte',b:`<p>Somme payée à la confirmation (${P(S.params.acompte)} du total). Elle sert à acheter les matières premières sans utiliser votre trésorerie.</p><div class="tip">Pas d'acompte = pas d'achat de marchandise. C'est votre protection contre les annulations.</div>`}),
+ plancher:()=>({t:'Prix plancher',b:`<p>Le <b>montant HT minimum</b> à facturer pour cette commande pour atteindre votre marge cible.</p><p><b>Formule :</b> coût total ÷ (1 − marge cible)</p><div class="ex"><b>Exemple :</b> coût total 93 850 F ÷ 0,60 = <b>156 417 F</b>. Si votre devis est en dessous, vous travaillez pour moins que votre objectif.</div>`}),
+ patron:()=>({t:'Vue client / Vue patron',b:`<p><b>Vue client</b> : uniquement ce que le client doit voir (plats, prix, total).</p><p><b>Vue patron</b> : en plus, vos coûts, votre <b>bénéfice</b>, le prix plancher et les recommandations.</p><div class="tip">Passez en vue client avant de montrer l'écran à un client. L'impression et le message WhatsApp n'affichent jamais vos coûts.</div>`}),
+ tva:()=>({t:'TVA',b:`<p>Laissez 0 % si votre activité n'est pas assujettie à la TVA (cas fréquent des petites structures). Sinon mettez le taux applicable.</p><div class="tip">En cas de doute sur votre régime fiscal, demandez à un comptable ou au centre des impôts.</div>`}),
+ sim_hausse:()=>({t:'Et si les prix montent ?',b:`<p>Bougez les curseurs pour simuler une hausse (ou une baisse) des prix d'achat. L'appli montre l'effet sur le coût et la marge de chaque plat, et le nouveau prix conseillé.</p><div class="ex"><b>Exemple :</b> poulet +20 % → le Tchèp poulet coûte ~150 F de plus par plat. Sur 50 plats, c'est 7 500 F de bénéfice en moins si vous ne bougez pas vos prix.</div><p>Vos vrais prix ne sont <b>pas modifiés</b>.</p>`}),
+ sim_event:()=>({t:'Simulateur gros événement',b:`<p>Pour un mariage, des funérailles, un séminaire… entrez le nombre d'invités (1 plat par invité), le plat, la remise et le nombre d'invités par serveur.</p><p>L'appli calcule le total, votre bénéfice et la <b>remise maximale</b> possible en restant à votre cible.</p><p>Bouton « Créer le devis » = le devis est rempli automatiquement.</p>`}),
+ sim_obj:()=>({t:'Objectif du mois',b:`<p>Combien de plats vendre pour payer vos <b>charges fixes</b> (loyer, salaires, électricité, eau, crédit…) et gagner le <b>bénéfice</b> que vous visez ?</p><p><b>Formule :</b> (charges + bénéfice visé) ÷ marge par plat</p><div class="ex"><b>Exemple :</b> (150 000 + 300 000) ÷ 1 278 F = <b>353 plats</b> par mois, soit environ 18 commandes de 20 plats.</div>`}),
+ sim_prix:()=>({t:'Quel prix fixer ?',b:`<p>Choisissez un plat puis ce que vous voulez gagner : <b>un montant par plat</b> (ex. 1 000 F) ou <b>un taux de marge</b> (ex. 45 %). L'appli donne le prix de vente à afficher.</p>`})
+};
+/* ===================== CONSEILS (contenu) ===================== */
+const TIPS=['Demandez toujours un acompte avant d\'acheter la marchandise.','Pesez vos portions avec une louche ou une barquette de même taille : même quantité = même coût.','Mettez à jour le prix du poulet et de l\'huile chaque semaine.','Proposez un menu « Entreprise » à prix fixe : plus simple à vendre et à préparer.','Une photo propre de vos plats sur WhatsApp Business vend mieux qu\'un long message.','Notez chaque commande dans l\'historique : vous saurez quels plats rapportent vraiment.','Ne comptez pas votre propre travail « gratuit » : prévoyez-le dans les charges.','Achetez riz, huile et emballages en gros quand le prix est bas, si vous avez de la place pour stocker.','Une remise se négocie contre quelque chose : paiement d\'avance, commande régulière, recommandation.','Livrez 15 minutes avant l\'heure : la ponctualité fait revenir les entreprises.','Gardez un plat « vedette » moins cher (ex. Tchèp poisson) pour attirer, et un plat « premium » (viande) pour la marge.','Calculez le gaz et l\'emballage : ce sont les coûts qu\'on oublie le plus.'];
+const VIEWS={};const SHEETS={};let sheet=null;let tourStep=0;
+/* ===================== ACCUEIL ===================== */
+VIEWS.home={html(){
+ const cs=S.plats.map(p=>({p,c:platCalc(p)}));const priced=cs.filter(x=>x.c.prix);
+ const ok=priced.filter(x=>x.c.st==='ok').length;const avg=priced.length?priced.reduce((s,x)=>s+x.c.taux,0)/priced.length:0;
+ const d=devisCalc();const low=cs.filter(x=>x.c.st==='warn'||x.c.st==='bad');
+ const tip=TIPS[new Date().getDate()%TIPS.length];
+ return`<div class="hero"><h2>Bonjour 👋🏾</h2><p>Calculez le <b>vrai coût</b> de vos plats et faites un devis rentable en 3 étapes.</p><button class="btn gold" data-a="tab" data-v="devis">🧾 Faire un devis</button></div>
+ <div class="steps">
+  <button class="step" data-a="goPrix"><span class="n">1</span><span><b>Mes prix d'achat</b><span class="muted">Riz, poulet, huile… au prix du marché</span></span><span class="go">›</span></button>
+  <button class="step" data-a="goPlats"><span class="n">2</span><span><b>Mes plats & prix de vente</b><span class="muted">Coût par plat, prix conseillé, marge</span></span><span class="go">›</span></button>
+  <button class="step" data-a="tab" data-v="devis"><span class="n">3</span><span><b>Mon devis</b><span class="muted">Total, remise, acompte, bénéfice, WhatsApp</span></span><span class="go">›</span></button>
+ </div>
+ <div class="kpis">
+  <div class="kpi"><b>${ok} / ${priced.length}</b><span>plats à la marge cible</span></div>
+  <div class="kpi"><b>${P(avg)}</b><span>marge moyenne (cible ${P(S.params.marge)})</span></div>
+  <div class="kpi"><b>${F(d.ttc)}</b><span>devis en cours (${d.nb} plats)</span></div>
+  <div class="kpi"><b style="color:${d.benef>=0?'var(--ok)':'var(--bad)'}">${F(d.benef)}</b><span>bénéfice du devis en cours</span></div>
+ </div>
+ <div class="card" style="margin-top:14px"><div class="hd"><h3>🔔 À surveiller</h3></div>
+ ${low.length?low.map(x=>`<div class="alert ${x.c.st==='bad'?'bad':'warn'}">${x.c.st==='bad'?'✖':'⚠'}<span><b>${esc(x.p.n)}</b> : marge ${P(x.c.taux)}. Prix conseillé <b>${F(x.c.cons)}</b> au lieu de ${F(x.c.prix)}.</span></div>`).join(''):'<div class="alert ok">✔<span>Tous vos plats respectent la marge cible. Bravo !</span></div>'}
+ ${S.ings.length?'':'<div class="alert warn">⚠ Aucun prix d\'achat saisi.</div>'}
+ </div>
+ <div class="card"><div class="hd"><h3>💡 Astuce du jour</h3></div><div class="tip">${tip}</div><button class="btn sm" data-a="tab" data-v="conseils">Voir tous les conseils ›</button></div>
+ <div class="btns"><button class="btn" data-a="tour">▶ Revoir le tutoriel</button><button class="btn" data-a="help" data-k="general">❓ Mode d'emploi</button></div>`}};
+/* ===================== PLATS & PRIX ===================== */
+VIEWS.plats={html(){
+ const seg=S.ui.platsSeg;
+ let h=`<div class="seg"><button class="${seg==='plats'?'on':''}" data-a="pseg" data-v="plats">🍛 Mes plats</button><button class="${seg==='prix'?'on':''}" data-a="pseg" data-v="prix">🛒 Prix d'achat</button></div>`;
+ if(seg==='plats'){
+  h+=`<div class="hd" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span class="muted">Touchez un plat pour voir sa recette ${qbtn('cout')}</span></div>`;
+  h+=S.plats.map(p=>{const c=platCalc(p);return`<button class="pcard" data-a="editPlat" data-id="${p.id}"><div class="top"><div><b>${esc(p.n)}</b><div class="muted">${esc(p.cat)} · ${p.portions} portions</div></div>${badge(c.st)}</div>
+   <div class="nums"><div><span>Coût / plat</span><strong>${F(c.rev)}</strong></div><div><span>Prix conseillé</span><strong>${F(c.cons)}</strong></div><div><span>Prix vente</span><strong>${c.prix?F(c.prix):'—'}</strong></div></div>
+   ${bar(c.taux)}<div class="muted" style="margin-top:6px">Marge : <b>${c.marge!=null?F(c.marge):'—'}</b> par plat · ${P(c.taux)}</div></button>`}).join('')||'<div class="empty">Aucun plat.</div>';
+  h+=`<button class="btn ghost full" data-a="addPlat">＋ Nouveau plat</button>`;
+ }else{
+  h+=`<div class="alert info">ℹ️<span>Saisissez le <b>prix réellement payé</b>. Prix d'exemple indicatifs (relevés OCPV / ANStat 2026) — à remplacer. ${qbtn('mercuriale')}</span></div>
+  <div class="search"><input id="ingSearch" placeholder="🔎 Rechercher un produit…" data-f="search"></div>
+  <div class="ingrow" style="border:0;font-size:12px;font-weight:700;color:var(--muted);padding-bottom:0"><span>Produit</span><span>Unité ${qbtn('lot')}</span><span>Prix (F)</span><span></span></div>`;
+  CATS.forEach(cat=>{const L=S.ings.filter(g=>(g.c||'Autre')===cat);if(!L.length)return;
+   h+=`<div class="cathd" data-cat="${cat}">${cat}</div>`+L.map(g=>{const used=S.plats.filter(p=>p.lines.some(l=>l.i===g.id)).map(p=>p.n);
+    return`<div class="ingrow" data-name="${esc(g.n.toLowerCase())}"><input value="${esc(g.n)}" data-f="ing" data-id="${g.id}" data-k="n" aria-label="Nom"><select data-c="ing" data-id="${g.id}" data-k="u">${UNITS.map(u=>`<option ${u===g.u?'selected':''}>${u}</option>`).join('')}</select><input inputmode="decimal" value="${g.p}" data-f="ing" data-id="${g.id}" data-k="p" aria-label="Prix"><button class="del" data-a="delIng" data-id="${g.id}" aria-label="Supprimer">🗑</button>
+    <div class="used">${used.length?'Utilisé dans : '+esc(used.join(', ')):'Non utilisé'} · <select data-c="ing" data-id="${g.id}" data-k="c" style="min-height:28px;width:auto;padding:2px 6px;font-size:12px;display:inline-block">${CATS.map(c=>`<option ${c===g.c?'selected':''}>${c}</option>`).join('')}</select></div></div>`}).join('')});
+  h+=`<button class="btn ghost full" style="margin-top:12px" data-a="addIng">＋ Ajouter un produit</button>`;
+ }
+ return h}};
+SHEETS.plat={title(){const p=platById(sheet.id);return p?p.n:'Plat'},html(){
+ const p=platById(sheet.id);if(!p)return'';const c=platCalc(p);
+ let h=`<div class="field"><label>Nom du plat</label><input value="${esc(p.n)}" data-f="plat" data-k="n"></div>
+ <div class="g2"><div class="field"><label>Catégorie</label><select data-c="plat" data-k="cat">${PCATS.map(x=>`<option ${x===p.cat?'selected':''}>${x}</option>`).join('')}</select></div>
+ <div class="field"><label>Portions ${qbtn('portions')}</label><input inputmode="numeric" value="${p.portions}" data-f="plat" data-k="portions"></div></div>
+ <div class="card" style="background:var(--cream)"><div class="hd"><h3>💰 Prix de vente</h3><span data-o="pe_st"></span></div>
+  <div class="g2"><div class="field"><label>Prix carte (F)</label><input inputmode="numeric" value="${p.prix||''}" data-f="plat" data-k="prix" id="pePrix"></div>
+  <div class="field"><label>Prix conseillé ${qbtn('conseille')}</label><button class="btn gold" data-a="useCons" style="min-height:44px"><span data-o="pe_cons"></span> ✓</button></div></div>
+  <div class="g3"><div class="kpi"><span>Coût / plat ${qbtn('cout')}</span><b data-o="pe_rev"></b></div><div class="kpi"><span>Marge / plat</span><b data-o="pe_mg"></b></div><div class="kpi"><span>Taux ${qbtn('marge')}</span><b data-o="pe_tx"></b></div></div>
+  <div data-o="pe_bar"></div></div>
+ <div class="card"><div class="hd"><h3>📋 Recette pour <span data-o="pe_por"></span> portions</h3></div>`;
+ p.lines.forEach((l,i)=>{const g=ingById(l.i);
+  h+=`<div class="line"><div class="lh"><select data-c="pline" data-i="${i}" data-k="i"><option value="">— choisir —</option>${S.ings.map(x=>`<option value="${x.id}" ${x.id===l.i?'selected':''}>${esc(x.n)}</option>`).join('')}</select><button class="del" data-a="delLine" data-i="${i}">🗑</button></div>
+  <div class="g3"><div><span class="muted">Quantité (${g?esc(g.u):'?'})</span><input inputmode="decimal" value="${l.q}" data-f="pline" data-i="${i}" data-k="q"></div><div><span class="muted">Prix / ${g?esc(g.u):'?'}</span><div style="padding:10px 0;font-weight:600">${g?F(g.p):'—'}</div></div><div><span class="muted">Coût</span><div style="padding:10px 0;font-weight:800;color:var(--br)" data-o="pl_${i}"></div></div></div></div>`});
+ h+=`<button class="btn ghost full" data-a="addLine">＋ Ajouter un ingrédient</button>
+ <div class="kv big" style="margin-top:10px"><span>Total recette</span><b data-o="pe_mat"></b></div></div>
+ <div class="explain"><b>🧮 Comment c'est calculé ?</b><div data-o="pe_exp"></div></div>
+ <div class="btns" style="margin-top:14px"><button class="btn" data-a="dupPlat">⧉ Dupliquer</button><button class="btn danger" data-a="delPlat">🗑 Supprimer</button></div>`;
+ return h},
+ outs(){const p=platById(sheet.id);if(!p)return{};const c=platCalc(p);const o={pe_st:badge(c.st),pe_cons:F(c.cons),pe_rev:F(c.rev),pe_mg:c.marge!=null?F(c.marge):'—',pe_tx:P(c.taux),pe_bar:bar(c.taux),pe_por:p.portions,pe_mat:F(c.mat)};
+  p.lines.forEach((l,i)=>{const g=ingById(l.i);o['pl_'+i]=g?F(g.p*num(l.q)):'—'});
+  o.pe_exp=`<ol><li>Ingrédients pour ${p.portions} portions : <b>${F(c.mat)}</b></li><li>÷ ${p.portions} portions = <b>${F(c.brut)}</b> par plat</li><li>+ ${P(S.params.pertes)} de pertes = coût de revient <b>${F(c.rev)}</b></li><li>÷ (1 − ${P(S.params.marge)}) = ${F(c.rev/(1-S.params.marge))} → prix conseillé arrondi <b>${F(c.cons)}</b></li>${c.prix?`<li>Vendu ${F(c.prix)} → vous gardez <b>${F(c.marge)}</b> par plat (${P(c.taux)})</li>`:''}</ol>`;
+  return o}};
+/* ===================== DEVIS ===================== */
+VIEWS.devis={html(){
+ const d=S.devis;const pat=S.ui.patron;
+ let h=`<div class="seg"><button class="${!pat?'on':''}" data-a="patron" data-v="0">👁 Vue client</button><button class="${pat?'on':''}" data-a="patron" data-v="1">🔒 Vue patron</button><button style="flex:0 0 44px" data-a="help" data-k="patron">ⓘ</button></div>
+ <div class="card"><div class="hd"><h3>👤 Client</h3></div>
+  <div class="g2"><div class="field"><label>N° devis</label><input value="${esc(d.num)}" data-f="dc" data-k="num"></div><div class="field"><label>Date</label><input type="date" value="${esc(d.date)}" data-f="dc" data-k="date"></div></div>
+  <div class="field"><label>Nom du client</label><input value="${esc(d.client)}" data-f="dc" data-k="client" placeholder="Ex. Société ABC / Mme Koné"></div>
+  <div class="g2"><div class="field"><label>Téléphone WhatsApp</label><input type="tel" value="${esc(d.tel)}" data-f="dc" data-k="tel" placeholder="+225…"></div><div class="field"><label>Événement</label><input value="${esc(d.event)}" data-f="dc" data-k="event" placeholder="Mariage, séminaire…"></div></div>
+  <div class="field"><label>Date & lieu de livraison</label><input value="${esc(d.lieu)}" data-f="dc" data-k="lieu"></div></div>
+ <div class="card"><div class="hd"><h3>🍛 Plats ${qbtn('min')}</h3><span data-o="d_nbb"></span></div>`;
+ d.lines.forEach((l,i)=>{h+=`<div class="line"><div class="lh"><select data-c="dl" data-i="${i}" data-k="plat"><option value="">— choisir un plat —</option>${S.plats.map(p=>`<option value="${p.id}" ${p.id===l.plat?'selected':''}>${esc(p.n)}</option>`).join('')}</select><button class="del" data-a="delDl" data-i="${i}">🗑</button></div>
+  <div class="lgrid"><div class="stepper"><button data-a="qty" data-i="${i}" data-d="-5">−</button><input inputmode="numeric" id="dlq_${i}" value="${l.q}" data-f="dl" data-i="${i}" data-k="q"><button data-a="qty" data-i="${i}" data-d="5">+</button></div>
+  <div class="small">Prix carte <b data-o="dl_${i}_pu"></b><br>Montant <b style="color:var(--br);font-size:16px" data-o="dl_${i}_mt"></b></div>
+  <div class="small muted">Prix négocié ${qbtn('negocie')}</div><input inputmode="numeric" value="${esc(l.pn)}" placeholder="vide = prix carte" data-f="dl" data-i="${i}" data-k="pn">
+  <div class="patron-only small muted" style="grid-column:1/-1" data-o="dl_${i}_pat"></div></div></div>`});
+ h+=`<div class="chips">${S.plats.map(p=>`<button class="chip" data-a="quickPlat" data-id="${p.id}">＋ ${esc(p.n)}</button>`).join('')}</div>
+  <div data-o="d_minalert"></div></div>
+ <div class="card"><div class="hd"><h3>🚚 Frais annexes ${qbtn('frais')}</h3></div>`;
+ d.frais.forEach((f,i)=>{h+=`<div class="line"><div class="lh"><input value="${esc(f.d)}" data-f="df" data-i="${i}" data-k="d"><button class="del" data-a="delDf" data-i="${i}">🗑</button></div>
+  <div class="g3"><div><span class="muted">Qté</span><input inputmode="numeric" value="${f.q}" data-f="df" data-i="${i}" data-k="q"></div><div><span class="muted">Prix facturé</span><input inputmode="numeric" value="${f.pv}" data-f="df" data-i="${i}" data-k="pv"></div><div class="patron-only"><span class="muted">Coût réel</span><input inputmode="numeric" value="${f.co}" data-f="df" data-i="${i}" data-k="co"></div></div>
+  <div class="small" style="margin-top:6px">Montant <b data-o="df_${i}_mt"></b><span class="patron-only muted" data-o="df_${i}_mg"></span></div></div>`});
+ h+=`<div class="chips">${[['Livraison',5000,3000],['Personnel de service',7500,5000],['Location matériel',10000,7000],['Boissons (pack)',3000,2200],['Décoration',15000,10000]].map(x=>`<button class="chip" data-a="quickFrais" data-d="${x[0]}" data-pv="${x[1]}" data-co="${x[2]}">＋ ${x[0]}</button>`).join('')}</div></div>
+ <div class="card"><div class="hd"><h3>🧾 Récapitulatif</h3></div>
+  <div class="kv"><span>Sous-total plats</span><b data-o="r_st"></b></div>
+  <div class="kv"><span>Remise volume <span data-o="r_rp"></span> ${qbtn('remise')}</span><b data-o="r_rem"></b></div>
+  <div class="field" style="margin:6px 0"><label>Remise forcée (%) — vide = barème automatique</label><input inputmode="decimal" value="${esc(d.rf)}" data-f="drf" placeholder="ex. 5"></div>
+  <div class="kv"><span>Plats après remise</span><b data-o="r_net"></b></div>
+  <div class="kv"><span>Frais annexes</span><b data-o="r_fr"></b></div>
+  <div class="kv"><span>Total HT</span><b data-o="r_ht"></b></div>
+  <div class="kv"><span>TVA (${P(S.params.tva)}) ${qbtn('tva')}</span><b data-o="r_tva"></b></div>
+  <div class="kv tot"><span>TOTAL À PAYER</span><b data-o="r_ttc"></b></div>
+  <div class="kv"><span>Acompte (${P(S.params.acompte)}) ${qbtn('acompte')}</span><b data-o="r_acp"></b></div>
+  <div class="kv"><span>Solde à la livraison</span><b data-o="r_sol"></b></div></div>
+ <div class="card patron patron-only"><div class="hd"><h3>🔒 Analyse patron</h3><span class="tag">NON VISIBLE CLIENT</span></div>
+  <div class="kv"><span>Coût des plats</span><b data-o="a_cp"></b></div>
+  <div class="kv"><span>Coût des frais annexes</span><b data-o="a_fc"></b></div>
+  <div class="kv"><span>Coût total</span><b data-o="a_ct"></b></div>
+  <div class="kv big"><span>💰 BÉNÉFICE</span><b data-o="a_bn"></b></div>
+  <div class="kv"><span>Taux de marge ${qbtn('marge')}</span><b data-o="a_tx"></b></div>
+  <div data-o="a_bar"></div>
+  <div class="kv" style="margin-top:6px"><span>Bénéfice par plat</span><b data-o="a_pp"></b></div>
+  <div class="kv"><span>Prix plancher HT ${qbtn('plancher')}</span><b data-o="a_pl"></b></div>
+  <div class="kv"><span>Remise max. à la cible</span><b data-o="a_rm"></b></div>
+  <div style="margin-top:8px"><b>🧭 Recommandations</b><ul class="reco" data-o="a_reco"></ul></div></div>
+ <div class="btns"><button class="btn wa" data-a="wa">📲 WhatsApp</button><button class="btn" data-a="copy">📋 Copier le texte</button><button class="btn" data-a="print">🖨 Imprimer / PDF</button><button class="btn pri" data-a="saveDevis">💾 Enregistrer</button></div>
+ <button class="btn ghost full" style="margin-top:10px" data-a="newDevis">＋ Nouveau devis</button>
+ <div class="card" style="margin-top:14px"><div class="hd"><h3>🗂 Historique des devis</h3><span class="muted">${S.history.length}</span></div>
+ ${S.history.length?S.history.map((x,i)=>`<div class="hist"><div><b>${esc(x.num)} — ${esc(x.client||'Sans nom')}</b><span class="muted">${esc(x.date)} · ${x.nb} plats · ${F(x.ttc)} · <span class="patron-only">bénéfice ${F(x.benef)}</span></span></div><button class="btn sm" data-a="openHist" data-i="${i}">Ouvrir</button><button class="del" data-a="delHist" data-i="${i}">🗑</button></div>`).join(''):'<div class="empty">Aucun devis enregistré. Touchez « 💾 Enregistrer » pour garder une trace.</div>'}
+ ${S.history.length>1?`<div class="kv patron-only" style="margin-top:8px"><span>Bénéfice total des devis enregistrés</span><b>${F(S.history.reduce((s,x)=>s+x.benef,0))}</b></div>`:''}</div>`;
+ return h},
+ outs(){const d=S.devis,c=devisCalc(),m=S.params.marge,o={};
+  c.L.forEach((x,i)=>{o[`dl_${i}_pu`]=x?F(x.c.prix):'—';o[`dl_${i}_mt`]=x?F(x.mt):'—';
+   o[`dl_${i}_pat`]=x?`Coût ${F(x.co)} · marge <b style="color:${x.mg>=0?'var(--ok)':'var(--bad)'}">${F(x.mg)}</b>${x.neg&&x.pu<x.c.rev?' · <b style="color:var(--bad)">⚠ prix sous le coût !</b>':''}`:''});
+  c.FR.forEach((x,i)=>{o[`df_${i}_mt`]=F(x.mt);o[`df_${i}_mg`]=` · marge ${F(x.mg)}`});
+  o.d_nbb=`<span class="badge ${c.nb>=S.params.min?'b-ok':'b-bad'}">${c.nb} plats</span>`;
+  o.d_minalert=c.nb<S.params.min?`<div class="alert bad">⚠<span>Minimum <b>${S.params.min} plats</b> par commande. Il en manque ${S.params.min-c.nb}.</span></div>`:`<div class="alert ok">✔<span>Commande de <b>${c.nb} plats</b>${c.r>0?` — remise volume ${P(c.r)}`:''}.</span></div>`;
+  Object.assign(o,{r_st:F(c.st),r_rp:`(${P(c.r)}${c.forced?' forcée':''})`,r_rem:c.rem?'− '+F(c.rem):F(0),r_net:F(c.net),r_fr:F(c.fr),r_ht:F(c.ht),r_tva:F(c.tva),r_ttc:F(c.ttc),r_acp:F(c.acp),r_sol:F(c.solde),
+   a_cp:F(c.cp),a_fc:F(c.fc),a_ct:F(c.cout),a_bn:`<span style="color:${c.benef>=0?'var(--ok)':'var(--bad)'}">${F(c.benef)}</span>`,a_tx:`${P(c.taux)} ${c.status==='ok'?badge('ok'):c.status==='bad'?badge('bad'):badge('warn')}`,a_bar:bar(c.taux),a_pp:F(c.parPlat),a_pl:F(c.plancher),a_rm:c.st?P(Math.max(0,c.rmax)):'—'});
+  const R=[];
+  if(c.nb<S.params.min)R.push(`⚠ Commande sous le minimum de ${S.params.min} plats : proposez d'ajouter ${S.params.min-c.nb} plat(s) ou facturez un forfait.`);
+  if(c.benef<0)R.push(`✖ <b>Vous perdez ${F(-c.benef)}</b> sur cette commande. Facturez au moins <b>${F(c.plancher)} HT</b>.`);
+  else if(c.taux<m-1e-9){R.push(`⚠ Marge ${P(c.taux)} sous votre cible de ${P(m)}. Il manque <b>${F(c.plancher-c.ht)}</b> pour l'atteindre.`);
+   if(c.r>0)R.push(`💡 Limitez la remise à <b>${P(Math.max(0,c.rmax))}</b> au lieu de ${P(c.r)}, ou accordez-la contre un paiement de 100 % à la commande.`);
+   else R.push(`💡 Proposez un plat plus rentable ou ajoutez un service facturé (livraison, serveurs).`)}
+  else R.push(`✔ Devis rentable : <b>${F(c.benef)}</b> de bénéfice, soit ${F(c.parPlat)} par plat.`);
+  c.L.forEach(x=>{if(x&&x.mt<x.co)R.push(`✖ <b>${esc(x.p.n)}</b> vendu sous son coût (${F(x.pu)} < ${F(x.c.rev)}).`);else if(x&&x.c.st==='warn'&&!x.neg)R.push(`⚠ Prix carte de <b>${esc(x.p.n)}</b> sous la cible : prix conseillé ${F(x.c.cons)}.`)});
+  c.FR.forEach((x,i)=>{if(x.mg<0)R.push(`⚠ « ${esc(d.frais[i].d)} » facturé moins cher qu'il ne coûte (perte ${F(-x.mg)}).`)});
+  if(c.nb>=50&&!d.frais.some(f=>/personnel|serveur/i.test(f.d)&&num(f.q)>0))R.push(`💡 ${c.nb} plats : pensez à facturer du personnel de service (≈ 1 serveur pour 25 invités).`);
+  if(c.nb>0&&!d.frais.some(f=>/livr/i.test(f.d)&&num(f.q)>0))R.push(`💡 Pas de livraison facturée : est-ce bien voulu ?`);
+  if(S.params.acompte<0.3)R.push(`💡 Acompte faible (${P(S.params.acompte)}) : visez 50 % pour financer les achats.`);
+  o.a_reco=R.map(x=>`<li>${x}</li>`).join('');return o}};
+/* ===================== SIMULER ===================== */
+const SG=[['fec','🍚 Riz & féculents'],['poulet','🍗 Poulet'],['poisson','🐟 Poisson'],['viande','🥩 Viande'],['leg','🥕 Légumes, tomate, épices'],['huile','🛢 Huile'],['energie','🔥 Gaz / charbon'],['emb','📦 Emballage']];
+VIEWS.sim={html(){const s=S.ui.simSeg,z=S.sim;
+ let h=`<div class="seg"><button class="${s==='hausse'?'on':''}" data-a="sseg" data-v="hausse">📈 Hausse prix</button><button class="${s==='event'?'on':''}" data-a="sseg" data-v="event">🎉 Événement</button><button class="${s==='obj'?'on':''}" data-a="sseg" data-v="obj">🎯 Objectif</button><button class="${s==='prix'?'on':''}" data-a="sseg" data-v="prix">🏷 Quel prix ?</button></div>`;
+ if(s==='hausse'){h+=`<div class="card"><div class="hd"><h3>📈 Et si les prix d'achat changent ? ${qbtn('sim_hausse')}</h3><button class="btn sm" data-a="simReset">↺ 0</button></div>
+  ${SG.map(([k,l])=>`<div class="range"><div class="rl"><span>${l}</span><b data-o="sf_${k}"></b></div><input type="range" min="-30" max="60" step="5" value="${z.f[k]||0}" data-f="simf" data-k="${k}"></div>`).join('')}</div>
+  <div class="card"><div class="hd"><h3>Résultat par plat</h3></div><div data-o="sh_sum"></div><div class="scroll" data-o="sh_tbl"></div></div>`}
+ else if(s==='event'){const e=z.ev;h+=`<div class="card"><div class="hd"><h3>🎉 Gros événement ${qbtn('sim_event')}</h3></div>
+  <div class="range"><div class="rl"><span>Nombre d'invités (1 plat / invité)</span><b data-o="se_n"></b></div><input type="range" min="10" max="1000" step="10" value="${e.n}" data-f="sime" data-k="n"></div>
+  <div class="field"><label>Plat servi</label><select data-c="sime" data-k="plat">${S.plats.map(p=>`<option value="${p.id}" ${p.id===e.plat?'selected':''}>${esc(p.n)}</option>`).join('')}</select></div>
+  <div class="g2"><div class="field"><label>Prix / plat (vide = carte)</label><input inputmode="numeric" value="${esc(e.pu)}" data-f="sime" data-k="pu"></div><div class="field"><label>Invités par serveur</label><input inputmode="numeric" value="${e.serv}" data-f="sime" data-k="serv"></div></div>
+  <div class="range"><div class="rl"><span>Remise accordée</span><b data-o="se_r"></b></div><input type="range" min="0" max="20" step="1" value="${e.remise}" data-f="sime" data-k="remise"></div>
+  <div class="g2"><div class="field"><label>Serveur : facturé</label><input inputmode="numeric" value="${e.servPv}" data-f="sime" data-k="servPv"></div><div class="field"><label>Serveur : coût</label><input inputmode="numeric" value="${e.servCo}" data-f="sime" data-k="servCo"></div>
+  <div class="field"><label>Livraison : facturée</label><input inputmode="numeric" value="${e.livPv}" data-f="sime" data-k="livPv"></div><div class="field"><label>Livraison : coût</label><input inputmode="numeric" value="${e.livCo}" data-f="sime" data-k="livCo"></div></div></div>
+  <div class="card"><div class="hd"><h3>Résultat</h3></div><div data-o="se_res"></div><button class="btn pri full" style="margin-top:10px" data-a="evToDevis">🧾 Créer le devis avec ces chiffres</button></div>`}
+ else if(s==='obj'){const b=z.obj;h+=`<div class="card"><div class="hd"><h3>🎯 Objectif du mois ${qbtn('sim_obj')}</h3></div>
+  <div class="field"><label>Charges fixes du mois (loyer, salaires, électricité, eau…)</label><input inputmode="numeric" value="${b.charges}" data-f="simo" data-k="charges"></div>
+  <div class="field"><label>Bénéfice que je veux gagner par mois</label><input inputmode="numeric" value="${b.benef}" data-f="simo" data-k="benef"></div>
+  <div class="g2"><div class="field"><label>Plat de référence</label><select data-c="simo" data-k="plat"><option value="avg" ${b.plat==='avg'?'selected':''}>Moyenne de mes plats</option>${S.plats.map(p=>`<option value="${p.id}" ${p.id===b.plat?'selected':''}>${esc(p.n)}</option>`).join('')}</select></div>
+  <div class="field"><label>Plats par commande</label><input inputmode="numeric" value="${b.parCmd}" data-f="simo" data-k="parCmd"></div></div></div>
+  <div class="card"><div class="hd"><h3>Ce qu'il faut vendre</h3></div><div data-o="so_res"></div></div>`}
+ else{const c=z.pc;h+=`<div class="card"><div class="hd"><h3>🏷 Quel prix de vente fixer ? ${qbtn('sim_prix')}</h3></div>
+  <div class="field"><label>Plat</label><select data-c="simp" data-k="plat">${S.plats.map(p=>`<option value="${p.id}" ${p.id===c.plat?'selected':''}>${esc(p.n)}</option>`).join('')}</select></div>
+  <div class="seg" style="margin-bottom:10px"><button class="${c.mode==='benef'?'on':''}" data-a="pcMode" data-v="benef">Gagner X F / plat</button><button class="${c.mode==='taux'?'on':''}" data-a="pcMode" data-v="taux">Taux de marge %</button></div>
+  <div class="field"><label>${c.mode==='benef'?'Je veux gagner (F par plat)':'Taux de marge voulu (%)'}</label><input inputmode="decimal" value="${c.val}" data-f="simp" data-k="val"></div></div>
+  <div class="card"><div class="hd"><h3>Prix à afficher</h3></div><div data-o="sp_res"></div><button class="btn pri full" style="margin-top:10px" data-a="applyPc">✓ Appliquer ce prix au plat</button></div>`}
+ return h},
+ outs(){const s=S.ui.simSeg,z=S.sim,m=S.params.marge,o={};
+  if(s==='hausse'){SG.forEach(([k])=>o['sf_'+k]=(z.f[k]>0?'+':'')+(z.f[k]||0)+' %');
+   const fac=g=>1+(z.f[grp(g)]||0)/100;let under=0,rows='';
+   S.plats.forEach(p=>{const a=platCalc(p),b=platCalc(p,fac);if(b.st==='warn'||b.st==='bad')under++;
+    rows+=`<tr><td><b>${esc(p.n)}</b></td><td>${F(a.rev)}</td><td style="color:${b.rev>a.rev?'var(--bad)':'var(--ok)'}">${F(b.rev)}</td><td>${P(a.taux)}</td><td><b style="color:${b.st==='ok'?'var(--ok)':'var(--bad)'}">${P(b.taux)}</b></td><td><b>${F(b.cons)}</b></td></tr>`});
+   o.sh_tbl=`<table class="tbl"><tr><th>Plat</th><th>Coût actuel</th><th>Coût simulé</th><th>Marge act.</th><th>Marge sim.</th><th>Prix conseillé</th></tr>${rows}</table>`;
+   const any=Object.values(z.f).some(v=>v);
+   o.sh_sum=!any?'<div class="alert info">ℹ️<span>Bougez un curseur pour voir l\'effet d\'une hausse.</span></div>':under?`<div class="alert warn">⚠<span><b>${under} plat(s)</b> passent sous la cible de ${P(m)}. Revoyez leur prix (colonne « Prix conseillé ») ou la recette.</span></div>`:'<div class="alert ok">✔<span>Tous vos plats restent à la cible avec ces hausses.</span></div>'}
+  if(s==='event'){const e=z.ev,p=platById(e.plat);o.se_n=e.n+' invités';o.se_r=e.remise+' %';
+   if(p){const c=platCalc(p),pu=num(e.pu)||c.prix,n=num(e.n),r=num(e.remise)/100,st=Math.ceil(n/Math.max(1,num(e.serv)));
+    const vp=n*pu,ht=vp*(1-r)+st*num(e.servPv)+num(e.livPv),cout=n*c.rev+st*num(e.servCo)+num(e.livCo),bn=ht-cout,tx=ht?bn/ht:0;
+    const fr=st*num(e.servPv)+num(e.livPv),rmax=vp?1-(cout/(1-m)-fr)/vp:0;
+    o.se_res=`<div class="kv"><span>${n} × ${esc(p.n)} à ${F(pu)}</span><b>${F(vp)}</b></div><div class="kv"><span>Remise ${e.remise} %</span><b>− ${F(vp*r)}</b></div><div class="kv"><span>${st} serveur(s) + livraison</span><b>${F(fr)}</b></div><div class="kv tot"><span>Total HT</span><b>${F(ht)}</b></div>
+    <div class="kv"><span>Coût total</span><b>${F(cout)}</b></div><div class="kv big"><span>💰 Bénéfice</span><b style="color:${bn>=0?'var(--ok)':'var(--bad)'}">${F(bn)}</b></div><div class="kv"><span>Taux de marge</span><b>${P(tx)}</b></div>${bar(tx)}
+    <div class="alert ${tx>=m?'ok':'warn'}" style="margin-top:10px">${tx>=m?'✔':'⚠'}<span>Remise maximale pour rester à ${P(m)} : <b>${P(Math.max(0,rmax))}</b>. Acompte à demander : <b>${F(Math.round(ht*(1+S.params.tva)*S.params.acompte/10)*10)}</b>.</span></div>
+    <div class="tip">🛒 Achats à prévoir : ${p.lines.slice(0,6).map(l=>{const g=ingById(l.i);return g?`${(Math.round(num(l.q)*n/num(p.portions)*10)/10).toLocaleString('fr-FR')} ${esc(g.u)} ${esc(g.n.split(' (')[0].toLowerCase())}`:''}).filter(Boolean).join(', ')}…</div>`}}
+  if(s==='obj'){const b=z.obj;let mg,lab;
+   if(b.plat==='avg'){const L=S.plats.map(p=>platCalc(p)).filter(c=>c.prix);mg=L.length?L.reduce((s,c)=>s+c.marge,0)/L.length:0;lab='marge moyenne'}else{const p=platById(b.plat);mg=p?platCalc(p).marge||0:0;lab='marge de '+(p?esc(p.n):'')}
+   const need=num(b.charges)+num(b.benef);
+   if(mg<=0)o.so_res='<div class="alert bad">✖<span>La marge par plat est nulle ou négative : impossible d\'atteindre l\'objectif. Revoyez vos prix.</span></div>';
+   else{const n=Math.ceil(need/mg),pm=Math.ceil(num(b.charges)/mg);
+    o.so_res=`<div class="kv"><span>Charges + bénéfice visé</span><b>${F(need)}</b></div><div class="kv"><span>${lab} par plat</span><b>${F(mg)}</b></div>
+    <div class="kv tot"><span>Plats à vendre / mois</span><b>${NF.format(n)}</b></div>
+    <div class="g3" style="margin-top:8px"><div class="kpi"><span>par semaine</span><b>${NF.format(Math.ceil(n/4.33))}</b></div><div class="kpi"><span>par jour (26 j)</span><b>${NF.format(Math.ceil(n/26))}</b></div><div class="kpi"><span>commandes de ${num(b.parCmd)||1}</span><b>${NF.format(Math.ceil(n/(num(b.parCmd)||1)))}</b></div></div>
+    <div class="alert info" style="margin-top:10px">ℹ️<span><b>Point mort</b> : les <b>${NF.format(pm)}</b> premiers plats du mois servent juste à payer les charges. Le bénéfice commence après.</span></div>`}}
+  if(s==='prix'){const c=z.pc,p=platById(c.plat);if(p){const k=platCalc(p);let pr=c.mode==='benef'?k.rev+num(c.val):(num(c.val)<100?k.rev/(1-num(c.val)/100):0);pr=ceilTo(pr,S.params.arr);sheetPc=pr;
+   const tx=pr?(pr-k.rev)/pr:0;
+   o.sp_res=`<div class="kv"><span>Coût de revient</span><b>${F(k.rev)}</b></div><div class="kv tot"><span>Prix à afficher</span><b>${F(pr)}</b></div><div class="kv"><span>Vous gagnez par plat</span><b>${F(pr-k.rev)} (${P(tx)})</b></div><div class="kv"><span>Prix carte actuel</span><b>${k.prix?F(k.prix):'—'}</b></div><div class="kv"><span>Prix conseillé (cible ${P(m)})</span><b>${F(k.cons)}</b></div>
+   ${tx<m?`<div class="alert warn">⚠<span>Ce prix donne une marge sous votre cible de ${P(m)}.</span></div>`:''}`}}
+  return o}};
+let sheetPc=0;
+/* ===================== CONSEILS ===================== */
+VIEWS.conseils={html(){const m=S.params.marge;
+ const CL=['Le client a bien confirmé le nombre de plats et la date','Les prix d\'achat ont été mis à jour cette semaine','La marge du devis est au-dessus de la cible (vue patron)','La livraison et le personnel sont facturés','L\'acompte est demandé avant tout achat','Le lieu, l\'heure et le contact sur place sont notés','Les emballages et le gaz sont en stock','Le devis a été envoyé par écrit (WhatsApp ou PDF)'];
+ return`<h2>💡 Conseils & bonnes pratiques</h2>
+ <details class="acc" open><summary>🎯 Les cibles à viser</summary><div class="bd">
+  ${[[P(m),'Marge brute minimum sur chaque plat et chaque devis'],['≤ '+P(1-m),'Food cost : coût du plat ÷ prix de vente'],['≤ 5 %','Pertes et gaspillage'],['50 %','Acompte à la confirmation'],['48 h','Délai minimum de commande'],['≤ 10 %','Remise maximum, et seulement pour les grosses commandes'],['1×/sem.','Mise à jour des prix d\'achat'],['10 plats','Commande minimum pour un devis']].map(x=>`<div class="target"><span class="v">${x[0]}</span><span>${x[1]}</span></div>`).join('')}
+ </div></details>
+ <details class="acc"><summary>👥 Les clients à cibler</summary><div class="bd">
+  <div class="rex"><b>🏢 Entreprises & bureaux</b><br>Déjeuners d'équipe, séminaires, réunions. Commandes régulières, paiement fiable. <i>Astuce : proposez un « menu du jour entreprise » à prix fixe et une facture propre.</i></div>
+  <div class="rex"><b>💍 Mariages, baptêmes, anniversaires</b><br>Gros volumes (100–500 plats). <i>Astuce : vendez un forfait « plats + service + livraison », acompte 50 % obligatoire.</i></div>
+  <div class="rex"><b>🕊 Funérailles & veillées</b><br>Volumes importants, délais courts. <i>Astuce : ayez un devis type prêt à envoyer en 5 minutes.</i></div>
+  <div class="rex"><b>⛪🕌 Églises, mosquées, associations</b><br>Événements réguliers (fêtes, retraites, conventions). <i>Astuce : tarif fidélité contre un engagement sur plusieurs dates.</i></div>
+  <div class="rex"><b>🎓 Écoles & universités</b><br>Soutenances, fêtes de fin d'année, journées portes ouvertes. <i>Astuce : formule petit prix (Tchèp poisson) en grande quantité.</i></div>
+  <div class="rex"><b>🏗 Chantiers, ONG, ateliers de formation</b><br>Repas sur plusieurs jours. <i>Astuce : contrat à la semaine avec paiement hebdomadaire.</i></div>
+ </div></details>
+ <details class="acc"><summary>📚 Retours d'expérience (cas types)</summary><div class="bd"><p class="muted">Situations fréquentes dans la restauration, pour apprendre sans payer le prix fort.</p>
+  <div class="rex"><b>Le mariage « rentable » qui n'a rien rapporté</b><br>300 plats vendus 2 500 F, mais livraison, 10 serveurs et 300 barquettes oubliés dans le prix.<div class="les">✔ Leçon : chaque frais doit être une ligne du devis. Regardez le bénéfice dans la vue patron avant de signer.</div></div>
+  <div class="rex"><b>La remise de trop</b><br>Remise de 10 % sur 80 plats pour « faire plaisir » : le bénéfice est passé de 70 000 F à 45 000 F.<div class="les">✔ Leçon : une remise se donne contre quelque chose (paiement total d'avance, commande régulière). Vérifiez la « remise max. à la cible ».</div></div>
+  <div class="rex"><b>Le poulet qui a augmenté</b><br>Prix fixé en janvier, poulet +25 % en mars : chaque Tchèp poulet rapportait 200 F de moins.<div class="les">✔ Leçon : mettez à jour les prix d'achat chaque semaine et utilisez le simulateur « Hausse prix ». Indiquez une validité sur vos devis (${S.params.validite} jours).</div></div>
+  <div class="rex"><b>L'annulation la veille</b><br>150 plats préparés sans acompte, événement annulé : toute la marchandise perdue.<div class="les">✔ Leçon : pas d'acompte = pas d'achat. ${P(S.params.acompte)} à la confirmation.</div></div>
+  <div class="rex"><b>Les portions « à l'œil »</b><br>Chaque cuisinière servait à sa façon : 10 kg de riz donnaient 70 plats un jour, 90 le lendemain.<div class="les">✔ Leçon : une louche ou une barquette standard par plat. Même portion = même coût = même marge.</div></div>
+  <div class="rex"><b>Le client entreprise fidélisé</b><br>Livraison toujours à l'heure, facture propre, menu varié : une commande de 20 plats chaque vendredi pendant un an.<div class="les">✔ Leçon : la régularité vaut plus qu'une grosse commande isolée. Soignez les entreprises.</div></div>
+ </div></details>
+ <details class="acc"><summary>💡 Astuces pour gagner plus</summary><div class="bd">${TIPS.map(t=>`<div class="tip">${t}</div>`).join('')}</div></details>
+ <details class="acc"><summary>✅ Bonnes pratiques</summary><div class="bd">
+  <p><b>🧼 Hygiène & sécurité</b><br>Mains lavées, cheveux couverts, viande et poisson au frais, plats transportés couverts et chauds. Un client malade = une réputation perdue.</p>
+  <p><b>📝 Commande écrite</b><br>Toujours un devis écrit (WhatsApp ou PDF) avec nombre de plats, date, lieu, prix, acompte. Le client répond « Bon pour accord ».</p>
+  <p><b>💵 Argent séparé</b><br>Séparez l'argent du restaurant et l'argent de la maison. Notez chaque achat.</p>
+  <p><b>📦 Stock</b><br>Premier entré, premier sorti. Vérifiez gaz, huile et emballages avant chaque grosse commande.</p>
+  <p><b>📲 WhatsApp Business</b><br>Catalogue avec photos et prix, message d'accueil automatique, étiquettes « devis envoyé / acompte reçu / livré ».</p>
+  <p><b>⭐ Après la livraison</b><br>Demandez un avis et une photo au client. Un client satisfait recommande 3 personnes.</p>
+ </div></details>
+ <details class="acc"><summary>⛔ Erreurs à éviter</summary><div class="bd">
+  <div class="alert bad">✖<span>Fixer le prix en regardant le voisin, sans calculer son coût.</span></div>
+  <div class="alert bad">✖<span>Oublier le gaz, l'huile, les épices et l'emballage dans le coût.</span></div>
+  <div class="alert bad">✖<span>Faire « coût + 40 % » au lieu de « coût ÷ 0,60 ».</span></div>
+  <div class="alert bad">✖<span>Livrer gratuitement loin, ou payer les serveurs de sa poche.</span></div>
+  <div class="alert bad">✖<span>Acheter la marchandise avant l'acompte.</span></div>
+  <div class="alert bad">✖<span>Accepter une remise sans regarder le bénéfice.</span></div>
+ </div></details>
+ <details class="acc"><summary>☑️ Check-list avant d'envoyer un devis</summary><div class="bd">${CL.map((t,i)=>`<label class="check"><input type="checkbox" ${S.ui['ck'+i]?'checked':''} data-c="ck" data-i="${i}"><span>${t}</span></label>`).join('')}<button class="btn sm" style="margin-top:8px" data-a="ckReset">↺ Tout décocher</button></div></details>
+ <details class="acc"><summary>📖 Petit glossaire</summary><div class="bd">
+  ${[['Mercuriale','Liste des prix d\'achat des produits','mercuriale'],['Fiche technique','Recette avec quantités exactes pour X portions','portions'],['Coût de revient','Ce que coûte vraiment un plat','cout'],['Prix conseillé','Prix pour atteindre la marge cible','conseille'],['Taux de marge','Ce qui reste sur 100 F vendus','marge'],['Food cost','Part du prix qui part dans le plat','foodcost'],['Prix plancher','Montant minimum d\'un devis','plancher'],['Point mort','Plats à vendre juste pour payer les charges','sim_obj']].map(x=>`<div class="kv"><span><b>${x[0]}</b><br><span class="muted">${x[1]}</span></span>${qbtn(x[2])}</div>`).join('')}
+ </div></details>`}};
+/* ===================== RÉGLAGES ===================== */
+SHEETS.settings={title(){return'⚙ Réglages'},html(){const p=S.params;
+ return`<div class="card"><div class="hd"><h3>🏪 Mon restaurant</h3></div>
+ <div class="field"><label>Nom du restaurant</label><input value="${esc(p.nom)}" data-f="param" data-k="nom"></div>
+ <div class="field"><label>Téléphone / contact</label><input type="tel" value="${esc(p.tel)}" data-f="param" data-k="tel"></div></div>
+ <div class="card"><div class="hd"><h3>📊 Calculs</h3></div>
+ <div class="g2"><div class="field"><label>Marge cible (%) ${qbtn('marge')}</label><input inputmode="decimal" value="${pctv(p.marge)}" data-f="param" data-k="marge" data-t="pct"></div>
+ <div class="field"><label>Pertes (%) ${qbtn('pertes')}</label><input inputmode="decimal" value="${pctv(p.pertes)}" data-f="param" data-k="pertes" data-t="pct"></div>
+ <div class="field"><label>Minimum plats ${qbtn('min')}</label><input inputmode="numeric" value="${p.min}" data-f="param" data-k="min" data-t="num"></div>
+ <div class="field"><label>Arrondi prix (F)</label><input inputmode="numeric" value="${p.arr}" data-f="param" data-k="arr" data-t="num"></div>
+ <div class="field"><label>TVA (%) ${qbtn('tva')}</label><input inputmode="decimal" value="${pctv(p.tva)}" data-f="param" data-k="tva" data-t="pct"></div>
+ <div class="field"><label>Acompte (%) ${qbtn('acompte')}</label><input inputmode="decimal" value="${pctv(p.acompte)}" data-f="param" data-k="acompte" data-t="pct"></div>
+ <div class="field"><label>Validité devis (jours)</label><input inputmode="numeric" value="${p.validite}" data-f="param" data-k="validite" data-t="num"></div></div></div>
+ <div class="card"><div class="hd"><h3>🏷 Barème remise volume ${qbtn('remise')}</h3></div>
+ ${S.tiers.map((t,i)=>`<div class="g2"><div class="field"><label>À partir de (plats)</label><input inputmode="numeric" value="${t.min}" data-f="tier" data-i="${i}" data-k="min"></div><div class="field"><label>Remise (%)</label><input inputmode="decimal" value="${pctv(t.r)}" data-f="tier" data-i="${i}" data-k="r"></div></div>`).join('')}</div>
+ <div class="card"><div class="hd"><h3>💾 Sauvegarde</h3></div><p class="muted">Vos données sont enregistrées sur ce téléphone. Gardez une copie de secours ou transférez-la sur un autre appareil.</p>
+ <div class="btns"><button class="btn" data-a="export">⬇ Exporter</button><button class="btn" data-a="import">⬆ Importer</button></div>
+ <button class="btn danger full" style="margin-top:10px" data-a="reset">↺ Revenir aux données d'exemple</button></div>`}};
+/* ===================== RENDU ===================== */
+const TABS=[['home','🏠','Accueil'],['plats','🍛','Plats'],['devis','🧾','Devis'],['sim','📊','Simuler'],['conseils','💡','Conseils']];
+function $(s){return document.querySelector(s)}
+function render(){
+ if(!VIEWS[S.ui.tab])S.ui.tab='home';
+ $('#hName').textContent=S.params.nom;
+ $('#nav').innerHTML=TABS.map(t=>`<button class="${S.ui.tab===t[0]?'on':''}" data-a="tab" data-v="${t[0]}"><span>${t[1]}</span>${t[2]}</button>`).join('');
+ document.body.classList.toggle('client',!S.ui.patron);
+ $('#view').innerHTML=VIEWS[S.ui.tab].html();
+ if(sheet)renderSheet();refresh()}
+function renderSheet(){const sh=SHEETS[sheet.type];const st=$('#sheet .sb')?$('#sheet .sb').scrollTop:0;
+ $('#sheet').innerHTML=`<div class="sh"><b>${esc(sh.title())}</b><button class="x" data-a="closeSheet">✕</button></div><div class="sb">${sh.html()}</div>`;
+ $('#sheetO').classList.add('on');$('#sheet .sb').scrollTop=st}
+function refresh(){let o={};const v=VIEWS[S.ui.tab];if(v.outs)o=v.outs();if(sheet&&SHEETS[sheet.type].outs)Object.assign(o,SHEETS[sheet.type].outs());
+ document.querySelectorAll('[data-o]').forEach(el=>{const k=el.dataset.o;if(k in o&&el.innerHTML!==String(o[k]))el.innerHTML=o[k]})}
+function openSheet(s){sheet=s;renderSheet();refresh()}
+function closeSheet(){sheet=null;$('#sheetO').classList.remove('on');render()}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2200)}
+function help(k){const h=HELP[k]?HELP[k]():{t:'Aide',b:''};$('#pop').innerHTML=`<h3>ⓘ ${h.t}</h3><div>${h.b}</div><button class="btn pri full" style="margin-top:14px" data-a="closePop">J'ai compris</button>`;$('#popO').classList.add('on')}
+const TOUR=[['🍛','Bienvenue !','Cette appli calcule le vrai coût de vos plats et vos devis pour les commandes de 10 plats et plus.'],['🛒','1. Vos prix d\'achat','Mettez les prix que vous payez au marché : riz au kg, poulet au kg, huile au litre, emballages…'],['📋','2. Vos plats','Chaque plat a sa recette pour 10 portions. L\'appli calcule le coût par plat et vous propose un prix de vente.'],['🧾','3. Le devis','Choisissez plats et quantités. Total, remise, acompte et bénéfice se calculent seuls. Envoyez-le par WhatsApp.'],['ⓘ','L\'aide est partout','Touchez le petit « i » à côté d\'un mot pour une explication avec un exemple. Les données restent sur votre téléphone.']];
+function showTour(){const t=TOUR[tourStep];$('#tour').innerHTML=`<div class="em">${t[0]}</div><h3>${t[1]}</h3><p>${t[2]}</p><div class="dots">${TOUR.map((x,i)=>`<i class="${i===tourStep?'on':''}"></i>`).join('')}</div><div class="btns"><button class="btn" data-a="tourEnd">Passer</button><button class="btn pri" data-a="tourNext">${tourStep<TOUR.length-1?'Suivant ›':'C\'est parti !'}</button></div>`;$('#tourO').classList.add('on')}
+/* ===================== TEXTE DEVIS (WhatsApp / impression) ===================== */
+function devisText(){const d=S.devis,c=devisCalc();let t=`*DEVIS N° ${d.num}* — ${S.params.nom}\nDate : ${fmtDate(d.date)}\n`;
+ if(d.client)t+=`Client : ${d.client}\n`;if(d.event)t+=`Événement : ${d.event}\n`;if(d.lieu)t+=`Livraison : ${d.lieu}\n`;
+ t+=`\n*Plats*\n`;c.L.forEach(x=>{if(x&&x.q)t+=`• ${x.q} × ${x.p.n} à ${F(x.pu)} = ${F(x.mt)}\n`});
+ t+=`Sous-total plats : ${F(c.st)}\n`;if(c.rem)t+=`Remise (${P(c.r)}) : − ${F(c.rem)}\n`;
+ const fr=d.frais.filter((f,i)=>c.FR[i].mt);if(fr.length){t+=`\n*Frais annexes*\n`;d.frais.forEach((f,i)=>{if(c.FR[i].mt)t+=`• ${f.d}${num(f.q)>1?` (${num(f.q)})`:''} : ${F(c.FR[i].mt)}\n`})}
+ if(c.tva)t+=`\nTVA : ${F(c.tva)}\n`;
+ t+=`\n*TOTAL À PAYER : ${F(c.ttc)}*\nAcompte à la confirmation (${P(S.params.acompte)}) : ${F(c.acp)}\nSolde à la livraison : ${F(c.solde)}\n\nDevis valable ${S.params.validite} jours.\nMerci pour votre confiance 🙏🏾\n${S.params.nom} — ${S.params.tel}`;return t}
+function fmtDate(s){if(!s)return'';const a=s.split('-');return a.length===3?a[2]+'/'+a[1]+'/'+a[0]:s}
+function buildPrint(){const d=S.devis,c=devisCalc();let r='';c.L.forEach(x=>{if(x&&x.q)r+=`<tr><td>${x.q}</td><td>${esc(x.p.n)}</td><td>${F(x.pu)}</td><td>${F(x.mt)}</td></tr>`});
+ d.frais.forEach((f,i)=>{if(c.FR[i].mt)r+=`<tr><td>${num(f.q)}</td><td>${esc(f.d)}</td><td>${F(num(f.pv))}</td><td>${F(c.FR[i].mt)}</td></tr>`});
+ $('#printArea').innerHTML=`<h1>${esc(S.params.nom)}</h1><div>${esc(S.params.tel)}</div><hr><h2 style="margin:6px 0">DEVIS N° ${esc(d.num)}</h2><div>Date : ${fmtDate(d.date)}</div><div>Client : <b>${esc(d.client)}</b> ${esc(d.tel)}</div><div>Événement : ${esc(d.event)}</div><div>Livraison : ${esc(d.lieu)}</div>
+ <table><tr><th>Qté</th><th>Désignation</th><th>Prix unitaire</th><th>Montant</th></tr>${r}
+ <tr><td></td><td>Sous-total plats</td><td></td><td>${F(c.st)}</td></tr>${c.rem?`<tr><td></td><td>Remise volume (${P(c.r)})</td><td></td><td>− ${F(c.rem)}</td></tr>`:''}
+ <tr><td></td><td>Total HT</td><td></td><td>${F(c.ht)}</td></tr>${c.tva?`<tr><td></td><td>TVA</td><td></td><td>${F(c.tva)}</td></tr>`:''}
+ <tr class="tt"><td></td><td>TOTAL À PAYER</td><td></td><td>${F(c.ttc)}</td></tr><tr><td></td><td>Acompte à la confirmation (${P(S.params.acompte)})</td><td></td><td>${F(c.acp)}</td></tr><tr><td></td><td>Solde à la livraison</td><td></td><td>${F(c.solde)}</td></tr></table>
+ <p style="font-size:11px">Devis valable ${S.params.validite} jours, établi sur la base des prix du jour des matières premières. Toute modification de quantité doit être signalée au moins 48 h avant la livraison.</p><p style="margin-top:30px">Bon pour accord (date, nom et signature du client) :</p>`}
+function copyText(t){if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(()=>toast('Texte copié ✓'),()=>fallbackCopy(t))}else fallbackCopy(t)}
+function fallbackCopy(t){const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('Texte copié ✓')}catch(e){toast('Copie impossible')}a.remove()}
+/* ===================== ACTIONS ===================== */
+const A={
+ tab(el){S.ui.tab=el.dataset.v;save();render();window.scrollTo(0,0)},
+ goPrix(){S.ui.tab='plats';S.ui.platsSeg='prix';save();render();window.scrollTo(0,0)},
+ goPlats(){S.ui.tab='plats';S.ui.platsSeg='plats';save();render();window.scrollTo(0,0)},
+ pseg(el){S.ui.platsSeg=el.dataset.v;save();render()},
+ sseg(el){S.ui.simSeg=el.dataset.v;save();render()},
+ help(el){help(el.dataset.k)},closePop(){$('#popO').classList.remove('on')},
+ settings(){openSheet({type:'settings'})},closeSheet(){closeSheet()},
+ tour(){tourStep=0;showTour()},tourNext(){if(tourStep<TOUR.length-1){tourStep++;showTour()}else A.tourEnd()},
+ tourEnd(){$('#tourO').classList.remove('on');S.ui.seen=true;save()},
+ editPlat(el){openSheet({type:'plat',id:el.dataset.id})},
+ addPlat(){const p={id:uid('p'),n:'Nouveau plat',cat:'Plat africain',portions:10,prix:0,lines:[{i:'riz',q:2.5},{i:'emb',q:10}]};S.plats.push(p);save();render();openSheet({type:'plat',id:p.id})},
+ dupPlat(){const p=platById(sheet.id);const c=JSON.parse(JSON.stringify(p));c.id=uid('p');c.n=p.n+' (copie)';S.plats.push(c);save();sheet.id=c.id;renderSheet();refresh();toast('Plat dupliqué')},
+ delPlat(){const p=platById(sheet.id);if(!confirm('Supprimer « '+p.n+' » ?'))return;S.plats=S.plats.filter(x=>x!==p);S.devis.lines=S.devis.lines.filter(l=>l.plat!==p.id);save();closeSheet();toast('Plat supprimé')},
+ useCons(){const p=platById(sheet.id);p.prix=platCalc(p).cons;save();renderSheet();refresh();toast('Prix conseillé appliqué ✓')},
+ addLine(){platById(sheet.id).lines.push({i:'',q:0});save();renderSheet();refresh();const s=$('#sheet .sb');s.scrollTop=s.scrollHeight},
+ delLine(el){platById(sheet.id).lines.splice(+el.dataset.i,1);save();renderSheet();refresh()},
+ addIng(){const g={id:uid('i'),n:'Nouveau produit',c:'Autre',u:'kg',p:0};S.ings.push(g);save();render();const e=document.querySelector(`[data-id="${g.id}"][data-k="n"]`);if(e){e.scrollIntoView({block:'center'});e.select()}},
+ delIng(el){const id=el.dataset.id,g=ingById(id),u=S.plats.filter(p=>p.lines.some(l=>l.i===id));if(!confirm(u.length?`« ${g.n} » est utilisé dans ${u.length} plat(s). Le supprimer aussi des recettes ?`:`Supprimer « ${g.n} » ?`))return;
+  S.ings=S.ings.filter(x=>x.id!==id);S.plats.forEach(p=>p.lines=p.lines.filter(l=>l.i!==id));save();render()},
+ patron(el){S.ui.patron=el.dataset.v==='1';save();render()},
+ qty(el){const l=S.devis.lines[+el.dataset.i];l.q=Math.max(0,num(l.q)+(+el.dataset.d));const inp=$('#dlq_'+el.dataset.i);if(inp)inp.value=l.q;save();refresh()},
+ delDl(el){S.devis.lines.splice(+el.dataset.i,1);save();render()},
+ quickPlat(el){const ex=S.devis.lines.find(l=>l.plat===el.dataset.id);if(ex){ex.q=num(ex.q)+10;toast('+10 '+platById(el.dataset.id).n)}else S.devis.lines.push({plat:el.dataset.id,q:10,pn:''});save();render()},
+ delDf(el){S.devis.frais.splice(+el.dataset.i,1);save();render()},
+ quickFrais(el){S.devis.frais.push({d:el.dataset.d,q:1,pv:+el.dataset.pv,co:+el.dataset.co});save();render();toast(el.dataset.d+' ajouté — vérifiez le prix')},
+ wa(){const tel=(S.devis.tel||'').replace(/\D/g,'');window.open('https://wa.me/'+tel+'?text='+encodeURIComponent(devisText()),'_blank')},
+ copy(){copyText(devisText())},
+ print(){buildPrint();window.print()},
+ saveDevis(){const c=devisCalc(),d=S.devis;const rec={num:d.num,date:fmtDate(d.date),client:d.client,nb:c.nb,ttc:c.ttc,benef:c.benef,data:JSON.parse(JSON.stringify(d))};
+  const i=S.history.findIndex(x=>x.num===d.num);if(i>=0)S.history[i]=rec;else S.history.unshift(rec);save();render();toast('Devis '+d.num+' enregistré ✓')},
+ newDevis(){if(!confirm('Commencer un nouveau devis ? (Pensez à enregistrer le devis actuel)'))return;S.ui.seq=(S.ui.seq||1)+1;const y=new Date().getFullYear();S.devis=newDevis(`DV-${y}-${String(S.ui.seq).padStart(3,'0')}`);save();render();window.scrollTo(0,0)},
+ openHist(el){const h=S.history[+el.dataset.i];S.devis=JSON.parse(JSON.stringify(h.data));save();render();window.scrollTo(0,0);toast('Devis '+h.num+' ouvert')},
+ delHist(el){if(!confirm('Supprimer ce devis de l\'historique ?'))return;S.history.splice(+el.dataset.i,1);save();render()},
+ simReset(){Object.keys(S.sim.f).forEach(k=>S.sim.f[k]=0);save();render()},
+ evToDevis(){const e=S.sim.ev,p=platById(e.plat);if(!p)return;const st=Math.ceil(num(e.n)/Math.max(1,num(e.serv)));const y=new Date().getFullYear();S.ui.seq=(S.ui.seq||1)+1;
+  S.devis=Object.assign(newDevis(`DV-${y}-${String(S.ui.seq).padStart(3,'0')}`),{event:'Événement '+e.n+' invités',lines:[{plat:p.id,q:num(e.n),pn:num(e.pu)?num(e.pu):''}],frais:[{d:'Livraison',q:1,pv:num(e.livPv),co:num(e.livCo)},{d:'Personnel de service (par personne)',q:st,pv:num(e.servPv),co:num(e.servCo)}],rf:String(e.remise)});
+  S.ui.tab='devis';save();render();window.scrollTo(0,0);toast('Devis créé — complétez le client')},
+ pcMode(el){S.sim.pc.mode=el.dataset.v;S.sim.pc.val=el.dataset.v==='benef'?1200:Math.round(S.params.marge*100);save();render()},
+ applyPc(){const p=platById(S.sim.pc.plat);if(!p||!sheetPc)return;p.prix=sheetPc;save();render();toast(p.n+' : '+F(sheetPc)+' ✓')},
+ ckReset(){Object.keys(S.ui).forEach(k=>{if(/^ck\d+$/.test(k))delete S.ui[k]});save();render()},
+ export(){const b=new Blob([JSON.stringify(S,null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='sauvegarde-tchep-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();toast('Sauvegarde téléchargée')},
+ import(){$('#fileIn').click()},
+ reset(){if(!confirm('Effacer vos données et revenir aux données d\'exemple ?'))return;const seen=S.ui.seen;S=defaults();S.ui.seen=seen;save();sheet=null;$('#sheetO').classList.remove('on');render();toast('Données d\'exemple rechargées')}
+};
+/* ===================== SAISIE ===================== */
+function onInput(t){const f=t.dataset.f,k=t.dataset.k,i=+t.dataset.i,v=t.value;
+ switch(f){
+  case'search':{const q=v.trim().toLowerCase();document.querySelectorAll('.ingrow[data-name]').forEach(r=>r.style.display=r.dataset.name.includes(q)?'':'none');return}
+  case'param':S.params[k]=t.dataset.t==='pct'?Math.min(num(v),95)/100:t.dataset.t==='num'?num(v):v;if(k==='nom')$('#hName').textContent=v;break;
+  case'tier':S.tiers[i][k]=k==='r'?num(v)/100:num(v);break;
+  case'ing':{const g=ingById(t.dataset.id);g[k]=k==='p'?num(v):v;break}
+  case'plat':{const p=platById(sheet.id);p[k]=k==='n'?v:num(v);if(k==='n'){const b=$('#sheet .sh b');if(b)b.textContent=v}break}
+  case'pline':platById(sheet.id).lines[i].q=num(v);break;
+  case'dc':S.devis[k]=v;break;
+  case'dl':S.devis.lines[i][k]=k==='pn'?(v.trim()===''?'':num(v)):num(v);break;
+  case'df':S.devis.frais[i][k]=k==='d'?v:num(v);break;
+  case'drf':S.devis.rf=v.trim()===''?'':num(v);break;
+  case'simf':S.sim.f[k]=num(v);break;
+  case'sime':S.sim.ev[k]=k==='pu'?(v.trim()===''?'':num(v)):num(v);break;
+  case'simo':S.sim.obj[k]=num(v);break;
+  case'simp':S.sim.pc[k]=num(v);break;
+  default:return}
+ save();refresh()}
+function onChange(t){const c=t.dataset.c,k=t.dataset.k,i=+t.dataset.i,v=t.value;if(!c)return;
+ switch(c){
+  case'ing':ingById(t.dataset.id)[k]=v;break;
+  case'plat':platById(sheet.id)[k]=v;break;
+  case'pline':platById(sheet.id).lines[i].i=v;break;
+  case'dl':S.devis.lines[i].plat=v;break;
+  case'sime':S.sim.ev[k]=v;break;
+  case'simo':S.sim.obj[k]=v;break;
+  case'simp':S.sim.pc[k]=v;break;
+  case'ck':S.ui['ck'+i]=t.checked;save();return}
+ save();render()}
+/* ===================== DÉMARRAGE ===================== */
+if(typeof document!=='undefined'&&document.getElementById('view')){
+ document.addEventListener('click',e=>{const a=e.target.closest('[data-a]');if(!a)return;if(A[a.dataset.a]){e.preventDefault();A[a.dataset.a](a,e)}});
+ document.addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.f)onInput(e.target)});
+ document.addEventListener('change',e=>{if(e.target.dataset&&e.target.dataset.c)onChange(e.target)});
+ $('#sheetO').addEventListener('click',e=>{if(e.target.id==='sheetO')closeSheet()});
+ $('#popO').addEventListener('click',e=>{if(e.target.id==='popO')A.closePop()});
+ $('#fileIn').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(!o.ings||!o.plats)throw 0;S=Object.assign(defaults(),o);save();sheet=null;$('#sheetO').classList.remove('on');render();toast('Données importées ✓')}catch(x){toast('Fichier invalide')}};r.readAsText(f);e.target.value=''});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#popO').classList.contains('on'))A.closePop();else if(sheet)closeSheet()}});
+ render();if(!S.ui.seen)showTour();
+}
+</script>
+</body>
+</html>
